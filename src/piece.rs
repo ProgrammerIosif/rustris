@@ -34,11 +34,11 @@ pub struct Piece {
 }
 
 impl Piece {
-    pub fn new(tetromino: Tetromino) -> Self {
+    pub fn new() -> Self {
         Piece {
             position: SPAWN_POINT,
             orientation_index: 0,
-            orientations: get_orientations(&tetromino),
+            orientations: get_orientations(&Tetromino::random()),
         }
     }
 
@@ -61,6 +61,10 @@ impl Piece {
 
     pub fn move_down(&mut self) {
         self.position.y += 1;
+    }
+
+    pub fn move_up(&mut self) {
+        self.position.y -= 1;
     }
 
     pub fn move_left(&mut self) {

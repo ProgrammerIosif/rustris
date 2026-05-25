@@ -3,21 +3,21 @@ mod piece;
 mod render;
 mod tetrominoes;
 
-use crate::{board::Board, piece::Piece, tetrominoes::Tetromino};
+use crate::{board::Board, piece::Piece};
 
 fn main() {
     // testing and prototyping
-    let board = Board::new();
-    let mut piece = Piece::new(Tetromino::O);
-    let squares = piece.get_squares();
-    squares.iter().for_each(|c| println!("{},{}", c.x, c.y));
+    let mut board = Board::new();
+    let mut piece = Piece::new();
     render::render(&board, &piece);
+    let mut key;
     loop {
         let mut input = String::new();
         std::io::stdin()
             .read_line(&mut input)
             .expect("Failed to read line");
-        match input.chars().next().expect("") {
+        key = input.chars().next().expect("");
+        match key {
             'a' => piece.move_left(),
             's' => piece.move_down(),
             'd' => piece.move_right(),
@@ -26,15 +26,20 @@ fn main() {
             _ => (),
         }
         if board.collision(&piece) {
-            match input.chars().next().expect("") {
+            match key {
                 'd' => piece.move_left(),
+                's' => {
+                    piece.move_up();
+                    board.add_piece_to_stack(&piece);
+                    board.clear_lines();
+                    piece = Piece::new();
+                }
                 'a' => piece.move_right(),
                 'x' => piece.rotate_counterclockwise(),
                 'z' => piece.rotate_clockwise(),
                 _ => (),
             }
         }
-
         render::render(&board, &piece);
     }
 

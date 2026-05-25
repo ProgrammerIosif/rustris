@@ -1,4 +1,5 @@
 use crate::piece::Position;
+use rand::RngExt;
 
 pub enum Tetromino {
     I,
@@ -10,7 +11,21 @@ pub enum Tetromino {
     Z,
 }
 
-pub fn get_orientations(tetromino: &Tetromino) -> &'static [[Position; 4]]{
+impl Tetromino {
+    pub fn random() -> Self {
+        match rand::rng().random_range(0..7) {
+            0 => Self::I,
+            1 => Self::O,
+            2 => Self::T,
+            3 => Self::S,
+            4 => Self::Z,
+            5 => Self::J,
+            _ => Self::L,
+        }
+    }
+}
+
+pub fn get_orientations(tetromino: &Tetromino) -> &'static [[Position; 4]] {
     match tetromino {
         Tetromino::I => &I_ORIENTATIONS,
         Tetromino::O => &O_ORIENTATIONS,
@@ -47,28 +62,28 @@ const O_ORIENTATIONS: [[Position; 4]; 1] = [[
 ]];
 
 const T_ORIENTATIONS: [[Position; 4]; 4] = [
-    // Up
-    [
-        Position { x: -1, y: 0 },
-        Position { x: 0, y: 0 },
-        Position { x: 1, y: 0 },
-        Position { x: 0, y: 1 },
-    ],
-    // Right
-    [
-        Position { x: 0, y: -1 },
-        Position { x: 0, y: 0 },
-        Position { x: 0, y: 1 },
-        Position { x: -1, y: 0 },
-    ],
     // Down
     [
         Position { x: -1, y: 0 },
         Position { x: 0, y: 0 },
         Position { x: 1, y: 0 },
-        Position { x: 0, y: -1 },
+        Position { x: 0, y: 1 },
     ],
     // Left
+    [
+        Position { x: 0, y: -1 },
+        Position { x: 0, y: 0 },
+        Position { x: 0, y: 1 },
+        Position { x: -1, y: 0 },
+    ],
+    // Up
+    [
+        Position { x: -1, y: 0 },
+        Position { x: 0, y: 0 },
+        Position { x: 1, y: 0 },
+        Position { x: 0, y: -1 },
+    ],
+    // Right
     [
         Position { x: 0, y: -1 },
         Position { x: 0, y: 0 },
@@ -139,7 +154,7 @@ const J_ORIENTATIONS: [[Position; 4]; 4] = [
     ],
 ];
 
-const S_ORIENTATIONS: [[Position; 4]; 2] = [
+const Z_ORIENTATIONS: [[Position; 4]; 2] = [
     // Horizontal
     [
         Position { x: -1, y: 0 },
@@ -149,14 +164,14 @@ const S_ORIENTATIONS: [[Position; 4]; 2] = [
     ],
     // Vertical
     [
-        Position { x: 0, y: -1 },
+        Position { x: 1, y: -1 },
+        Position { x: 1, y: 0 },
         Position { x: 0, y: 0 },
-        Position { x: -1, y: 0 },
-        Position { x: -1, y: 1 },
+        Position { x: 0, y: 1 },
     ],
 ];
 
-const Z_ORIENTATIONS: [[Position; 4]; 2] = [
+const S_ORIENTATIONS: [[Position; 4]; 2] = [
     // Horizontal
     [
         Position { x: -1, y: 1 },
@@ -166,9 +181,9 @@ const Z_ORIENTATIONS: [[Position; 4]; 2] = [
     ],
     // Vertical
     [
-        Position { x: -1, y: -1 },
-        Position { x: -1, y: 0 },
+        Position { x: 0, y: -1 },
         Position { x: 0, y: 0 },
-        Position { x: 0, y: 1 },
+        Position { x: 1, y: 0 },
+        Position { x: 1, y: 1 },
     ],
 ];
