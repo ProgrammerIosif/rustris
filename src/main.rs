@@ -9,7 +9,8 @@ fn main() {
     // testing and prototyping
     let mut board = Board::new();
     let mut piece = Piece::new();
-    render::render(&board, &piece);
+    let mut next_piece = Piece::new();
+    render::render(&board, &piece, &next_piece);
     let mut key;
     loop {
         let mut input = String::new();
@@ -32,7 +33,8 @@ fn main() {
                     piece.move_up();
                     board.add_piece_to_stack(&piece);
                     board.clear_lines();
-                    piece = Piece::new();
+                    piece = next_piece;
+                    next_piece = Piece::new();
                 }
                 'a' => piece.move_right(),
                 'x' => piece.rotate_counterclockwise(),
@@ -40,7 +42,7 @@ fn main() {
                 _ => (),
             }
         }
-        render::render(&board, &piece);
+        render::render(&board, &piece, &next_piece);
     }
 
     // game loop:
