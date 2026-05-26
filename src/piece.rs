@@ -27,6 +27,7 @@ pub const SPAWN_POINT: Position = Position { x: 5, y: 0 };
 /// position: the position of the "center of the piece" on the grid
 /// orientations: the positions of the squares relative to the piece position
 /// orientation_index: the current configuration of the piece
+#[derive(Copy, Clone)]
 pub struct Piece {
     position: Position,
     orientation_index: usize,

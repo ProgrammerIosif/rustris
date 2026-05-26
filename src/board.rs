@@ -37,6 +37,8 @@ impl Board {
     }
 
     pub fn add_piece_to_stack(&mut self, piece: &Piece) {
+        // TODO: when the stack is at the top of the screen and piece is dropped
+        // with a square with -y it panicks
         let piece_position = piece.get_position();
         for relative_position in piece.get_squares() {
             let Position { x, y } = piece_position + relative_position;
@@ -44,7 +46,7 @@ impl Board {
         }
     }
 
-    pub fn clear_lines(&mut self) -> usize {
+    pub fn clear_lines(&mut self) -> u32 {
         let mut count = 0;
         for i in (0..10).rev() {
             if self.0[i].iter().all(|x| x.is_some()) {
@@ -56,6 +58,6 @@ impl Board {
         for i in 0..count {
             self.0[i] = [None; 10];
         }
-        count
+        count as u32
     }
 }
