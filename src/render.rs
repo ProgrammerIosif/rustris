@@ -1,23 +1,11 @@
-use crate::{
-    board::*,
-    piece::{Piece, Position},
-};
+use crate::{board::*, game::Game, piece::Position};
 
-pub fn render(
-    board: &Board,
-    piece: &Piece,
-    next_piece: &Piece,
-    level: &u32,
-    lines: &u32,
-    score: &u32,
-) {
-    let board = board.get_data();
-
-    let pos = piece.get_position();
-    let squares = piece.get_squares();
+pub fn render(game: &Game) {
+    let board = game.board();
+    let pos = game.piece.get_position();
+    let squares = game.piece.get_squares();
     let piece_data: [Position; 4] = std::array::from_fn(|i| squares[i] + pos);
-
-    let next_piece_data = next_piece.get_squares();
+    let next_piece_data = game.next_piece.get_squares();
 
     for i in 0..BOARD_HEIGHT {
         for j in 0..BOARD_WIDTH {
@@ -34,9 +22,9 @@ pub fn render(
         }
 
         match i {
-            1 => print!("  Level {}", level),
-            2 => print!("  Lines {}", lines),
-            3 => print!("  Score {}", score),
+            1 => print!("  Level {}", game.level()),
+            2 => print!("  Lines {}", game.lines()),
+            3 => print!("  Score {}", game.score()),
             4 | 5 => {
                 print!("  ");
                 for j in -2..2 {
