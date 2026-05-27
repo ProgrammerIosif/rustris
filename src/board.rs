@@ -6,7 +6,7 @@ use crate::piece::Position;
 /// -Some(x), the cell is occupied, with a color x
 pub type Square = Option<i8>;
 
-pub const BOARD_HEIGHT: usize = 10;
+pub const BOARD_HEIGHT: usize = 20;
 pub const BOARD_WIDTH: usize = 10;
 
 pub struct Board([[Square; BOARD_WIDTH]; BOARD_HEIGHT]);
@@ -16,8 +16,8 @@ impl Board {
         Self([[None; BOARD_WIDTH]; BOARD_HEIGHT])
     }
 
-    pub fn get_data(&self) -> &[[Square; BOARD_WIDTH]; BOARD_HEIGHT] {
-        &self.0
+    pub fn is_filled(&self, x: usize, y: usize) -> bool {
+        self.0[y][x].is_some()
     }
 
     pub fn collision(&self, piece: &Piece) -> bool {
@@ -48,7 +48,7 @@ impl Board {
 
     pub fn clear_lines(&mut self) -> u32 {
         let mut count = 0;
-        for i in (0..10).rev() {
+        for i in (0..BOARD_HEIGHT).rev() {
             if self.0[i].iter().all(|x| x.is_some()) {
                 count += 1;
             } else if count != 0 {

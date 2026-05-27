@@ -1,5 +1,18 @@
 use crate::{board::*, piece::Piece};
 
+const LEVEL_SPEED: [u32; 30] = [
+    48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    1,
+];
+
+pub enum Action {
+    MoveLeft,
+    MoveDown,
+    MoveRight,
+    RotateClockWise,
+    RotateCounterClockWise,
+}
+
 pub struct Game {
     board: Board,
     pub piece: Piece,
@@ -7,6 +20,7 @@ pub struct Game {
     level: u32,
     lines: u32,
     score: u32,
+    frame: u32,
 }
 
 impl Game {
@@ -18,11 +32,12 @@ impl Game {
             level: 0,
             lines: 0,
             score: 0,
+            frame: 0,
         }
     }
 
-    pub fn board(&self) -> &[[Square; BOARD_WIDTH]; BOARD_HEIGHT] {
-        self.board.get_data()
+    pub fn is_filled(&self, x: usize, y: usize) -> bool {
+        self.board.is_filled(x, y) || self.piece.occupies(x, y)
     }
 
     pub fn level(&self) -> u32 {
@@ -51,19 +66,26 @@ impl Game {
         self.level = self.lines / 10;
     }
 
-    pub fn update(&mut self, key: char) {
+    pub fn increment_frame(&mut self) {
+        self.frame += 1;
+        if self.frame >= LEVEL_SPEED[self.level as usize] {
+            self.frame = 0;
+            self.update(Action::MoveDown);
+        }
+    }
+
+    pub fn update(&mut self, action: Action) {
         let old_piece = self.piece;
-        match key {
-            'a' => self.piece.move_left(),
-            's' => self.piece.move_down(),
-            'd' => self.piece.move_right(),
-            'z' => self.piece.rotate_counterclockwise(),
-            'x' => self.piece.rotate_clockwise(),
-            _ => (),
+        match action {
+            Action::MoveLeft => self.piece.move_left(),
+            Action::MoveRight => self.piece.move_right(),
+            Action::RotateCounterClockWise => self.piece.rotate_counterclockwise(),
+            Action::RotateClockWise => self.piece.rotate_clockwise(),
+            Action::MoveDown => self.piece.move_down(),
         }
         if self.board.collision(&self.piece) {
             self.piece = old_piece;
-            if key == 's' {
+            if let Action::MoveDown = action {
                 self.board.add_piece_to_stack(&self.piece);
                 self.update_stats();
                 self.piece = self.next_piece;

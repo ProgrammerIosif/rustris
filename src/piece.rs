@@ -51,6 +51,15 @@ impl Piece {
         self.orientations[self.orientation_index]
     }
 
+    pub fn occupies(&self, x: usize, y: usize) -> bool {
+        self.get_squares()
+            .map(|rel| rel + self.position)
+            .contains(&Position {
+                x: x as i8,
+                y: y as i8,
+            })
+    }
+
     pub fn rotate_clockwise(&mut self) {
         self.orientation_index = (self.orientation_index + 1) % self.orientations.len();
     }
@@ -62,10 +71,6 @@ impl Piece {
 
     pub fn move_down(&mut self) {
         self.position.y += 1;
-    }
-
-    pub fn move_up(&mut self) {
-        self.position.y -= 1;
     }
 
     pub fn move_left(&mut self) {

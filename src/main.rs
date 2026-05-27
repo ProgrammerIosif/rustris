@@ -1,21 +1,15 @@
+mod app;
 mod board;
 mod game;
 mod piece;
-mod render;
 mod tetrominoes;
 
-use crate::game::Game;
+use crate::app::App;
 
-fn main() {
-    let mut game = Game::new();
-    render::render(&game);
-    let mut input = String::new();
-    loop {
-        input.clear();
-        std::io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read line");
-        game.update(input.chars().next().expect(""));
-        render::render(&game);
-    }
+fn main() -> eframe::Result {
+    eframe::run_native(
+        "Tetris",
+        eframe::NativeOptions::default(),
+        Box::new(|_cc| Ok(Box::new(App::new()))),
+    )
 }
